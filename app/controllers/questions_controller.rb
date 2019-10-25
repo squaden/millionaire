@@ -15,7 +15,8 @@ class QuestionsController < ApplicationController
     elsif q_file.respond_to?(:path)
       file_lines = File.readlines(q_file.path)
     else
-      redirect_to new_questions_path, alert: "Bad file_data: #{q_file.class.name}, #{q_file.inspect}"
+      redirect_to new_questions_path,
+                  alert: "Bad file_data: #{q_file.class.name}, #{q_file.inspect}"
       return false
     end
 

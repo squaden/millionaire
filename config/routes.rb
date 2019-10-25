@@ -8,9 +8,9 @@ Rails.application.routes.draw do
   resources :users, only: [:index, :show]
 
   resources :games, only: [:create, :show] do
-    put 'help', on: :member # помощь зала
-    put 'answer', on: :member # ответ на текущий вопрос
-    put 'take_money', on: :member #  игрок берет деньги
+    put 'help', on: :member
+    put 'answer', on: :member
+    put 'take_money', on: :member
   end
 
   resource :questions, only: [:new, :create]
