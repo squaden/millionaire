@@ -40,26 +40,38 @@ RSpec.describe GameQuestion, type: :model do
   end
 
   context 'user helpers' do
+    let(:help_hash) { game_question.help_hash }
     it 'correct audience_help' do
-      expect(game_question.help_hash).not_to include(:audience_help)
+      expect(help_hash).not_to include(:audience_help)
 
       game_question.add_audience_help
 
-      expect(game_question.help_hash).to include(:audience_help)
+      expect(help_hash).to include(:audience_help)
 
-      ah = game_question.help_hash[:audience_help]
+      ah = help_hash[:audience_help]
       expect(ah.keys).to contain_exactly('a', 'b', 'c', 'd')
     end
 
     it 'correct fifty_fifty' do
-      expect(game_question.help_hash).not_to include(:fifty_fifty)
+      expect(help_hash).not_to include(:fifty_fifty)
       game_question.add_fifty_fifty
 
-      expect(game_question.help_hash).to include(:fifty_fifty)
-      ff = game_question.help_hash[:fifty_fifty]
+      expect(help_hash).to include(:fifty_fifty)
+      ff = help_hash[:fifty_fifty]
 
       expect(ff).to include('b')
       expect(ff.size).to eq 2
+    end
+
+    it 'correct friend_call' do
+      expect(help_hash).not_to include(:friend_call)
+
+      game_question.add_friend_call
+
+      expect(help_hash).to include(:friend_call)
+
+      fc = help_hash[:friend_call]
+      expect(fc).to include('считает, что это вариант')
     end
   end
 end
