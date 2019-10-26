@@ -12,6 +12,17 @@ class GameQuestion < ActiveRecord::Base
 
   serialize :help_hash, Hash
 
+  def apply_help!(help_type)
+    case help_type.to_sym
+    when :fifty_fifty
+      add_fifty_fifty
+    when :audience_help
+      add_audience_help
+    else
+      add_friend_call
+    end
+  end
+
   def variants
     {
       'a' => question.read_attribute("answer#{a}"),
