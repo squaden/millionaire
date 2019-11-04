@@ -20,7 +20,6 @@ RSpec.describe Game, type: :model do
 
       expect(game.user).to eq(user)
       expect(game.status).to eq(:in_progress)
-      # проверяем корректность массива игровых вопросов
       expect(game.game_questions.size).to eq(15)
       expect(game.game_questions.map(&:level)).to eq (0..14).to_a
     end
@@ -68,31 +67,30 @@ RSpec.describe Game, type: :model do
   end
 
   context 'correct .answer_current_question!' do
-    let(:answer_key) { game_w_questions.current_game_question.correct_answer_key }
+    let(:q) { game_w_questions.current_game_question }
 
     it 'correct answer' do
-      expect(game_w_questions.answer_current_question!(answer_key)).to be_truthy
+      expect(game_w_questions.answer_current_question!('d')).to be_truthy
       expect(game_w_questions.status).to eq(:in_progress)
       expect(game_w_questions.finished?).to be_falsey
     end
 
     it 'wrong answer' do
-      wrong_answer_key = (%w(a b c d) - [answer_key]).sample
-      expect(game_w_questions.answer_current_question!(wrong_answer_key)).to be_falsey
+      expect(game_w_questions.answer_current_question!('a')).to be_falsey
       expect(game_w_questions.status).to eq(:fail)
       expect(game_w_questions.finished?).to be_truthy
     end
 
     it 'last answer is correct' do
       game_w_questions.current_level = Question::QUESTION_LEVELS.max
-      expect(game_w_questions.answer_current_question!(answer_key)).to be_truthy
+      expect(game_w_questions.answer_current_question!('d')).to be_truthy
       expect(game_w_questions.status).to eq(:won)
       expect(game_w_questions.finished?).to be_truthy
     end
 
     it 'time-out loss' do
       game_w_questions.created_at = 1.hour.ago
-      game_w_questions.answer_current_question!(answer_key)
+      expect(game_w_questions.answer_current_question!(q.correct_answer_key)).to be_falsey
       expect(game_w_questions.status).to eq(:timeout)
       expect(game_w_questions.finished?).to be_truthy
     end
